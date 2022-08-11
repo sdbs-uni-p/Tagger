@@ -1,3 +1,5 @@
+# Main logic of the algorithm
+
 import json
 import os
 import sys
@@ -291,7 +293,7 @@ def update_schema(schema, tree):
         f.write(schema_dumps)
     schema["$schema"] = schema["$schema"].replace("draft-04", "draft-07")
     current_schema_global = None
-    # TODO: root may also be an array
+    
     total_schema = {"properties": {}}
 
     for k in ite_dict:
@@ -304,7 +306,7 @@ def update_schema(schema, tree):
             i += 1
             full_path += "/" + p
             ntype = findall(tree, lambda node: node.fullpathstr == full_path)[0].type
-            # TODO: array could be named "object"
+            
             if p != "object":
                 if p not in current_schema:
                     current_schema[p] = {}
@@ -438,6 +440,7 @@ def run_experiments(config_path, table_path):
                        # f"###### Config ######\n{json.dumps(config, indent=4)}"
 
             row_name = "row_" + str(i)
+            
             # Concatenation with allOf adds 4 additional lines
             size_ite = size_total - size_base - 4
             ratio = round(size_ite/size_total, 3)
@@ -461,6 +464,7 @@ def run(config_file, input_files):
     # supress prints from extract_from_file
     save_stdout = sys.stdout
     sys.stdout = open(os.devnull, 'w')
+    # Extract third-party with approach by Klette et al.
     schema_klettke = extract_from_files(input_files)
     sys.stdout = save_stdout
 

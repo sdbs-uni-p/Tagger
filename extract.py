@@ -1,4 +1,7 @@
-# Implementation of the appraoch by Klettke et al. 
+# Implementation of the appraoch "Schema Extraction and Structural Outlier
+#  Detection for JSON-based NoSQL Data Stores" by Klettke et al. in BTW '15
+#
+# Slightly modified for the integration into our tool
 
 import datetime  # aktuelle Zeit beim Speichern eines Schemas
 import json, bson

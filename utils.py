@@ -80,7 +80,6 @@ def val_type_filter(combs):
     filtered_combs = []
     rm_count = 0
     for c in combs:
-        # TODO: Remove
         if re.match(r'^_generic\d+_', c[0][0]):
             rm_count += 1
             continue
@@ -325,7 +324,6 @@ def filter_calc_ite(config, combs, stripped_combs, ref_rec, combs_list, plis):
             if found:
                 # Checking if smaller combination also covers whole set should not be necessary if we make sure that
                 # (len(combs[0]) + len(combs[1])) is monotonically increasing
-                # TODO: We currently don't make that sure
                 return True
 
     return False
@@ -361,11 +359,9 @@ def filter_ite_dict(ite_dict):
         i = 0
         for ite in ite_dict[path]:
             if not is_val(ite["if"]["properties"]) or not is_type(ite["then"]["properties"]):
-                #print(f"dct rm: {ite}")
                 filter_count += 1
                 del filterd_ite_dict[path][i]
             else:
-                #print(f"dct keep: {ite}")
                 i += 1
 
     pop_list = []
