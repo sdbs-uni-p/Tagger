@@ -376,7 +376,7 @@ def process_file(filenames):
     return root
 
 
-def run_experiments(config_path, table_path):
+def run_experiments(config_path):
     global config, schema_out, ite_schema_out, ite_dict, ite_cand_list, versions
     if os.path.exists(config_path):
         with open(config_path, "r", encoding='utf-8') as conf_file:
