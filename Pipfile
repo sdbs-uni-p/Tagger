@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+bson = "*"
+anytree = "*"
+more-itertools = "*"
+jsonpath-ng = "*"
+jsonschema = "*"
+requests = "*"
+pandas = "*"
+numpy = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
