@@ -23,8 +23,8 @@ def validate_list(inputs, schema_path):
         try:
             validate(js, schema)
         except ValidationError:
-            print("Validation of input JSON Document against produced JSON Schema failed")
+            print("Validation of input JSON document against produced JSON Schema failed")
             return True, False
         else:
-            print("Validation of input JSON Document against produced JSON Schema passed")
+            print("Validation of input JSON document against produced JSON Schema passed")
             return True, True
