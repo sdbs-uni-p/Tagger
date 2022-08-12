@@ -445,7 +445,7 @@ def run_experiments(config_path):
                         elem = elem["else"]
 
             res_str += f"\n\nRuntime: {elapsed_time}s\nCFDs found: {ite_count}\n\n" \
-                       f"Validation of procduced schema against JSON Schema Draft 7 {schema_state}" \
+                       f"Validation of produced schema against JSON Schema Draft 7 {schema_state}" \
                        f"\nValidation of input JSON Document against produced JSON Schema {input_state}\n\n" #\
                        # f"###### Config ######\n{json.dumps(config, indent=4)}"
 

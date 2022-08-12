@@ -11,11 +11,11 @@ def validate_list(inputs, schema_path):
     try:
         Draft7Validator.check_schema(schema)
     except ValidationError:
-        print("Validation of procduced schema against JSON Schema Draft 7 failed")
+        print("Validation of produced schema against JSON Schema Draft 7 failed")
         # We can not validate input against an invalid schema, thus we consider both failed
         return False, False
     else:
-        print("Validation of procduced schema against JSON Schema Draft 7 passed")
+        print("Validation of produced schema against JSON Schema Draft 7 passed")
         
     for json_path in inputs:
         with open(json_path, "r", encoding='utf-8') as f:
