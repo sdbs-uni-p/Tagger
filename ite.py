@@ -1,3 +1,5 @@
+# Main logic of the algorithm
+
 import json
 import os
 import sys
@@ -291,7 +293,7 @@ def update_schema(schema, tree):
         f.write(schema_dumps)
     schema["$schema"] = schema["$schema"].replace("draft-04", "draft-07")
     current_schema_global = None
-    # TODO: root may also be an array
+    
     total_schema = {"properties": {}}
 
     for k in ite_dict:
@@ -304,7 +306,7 @@ def update_schema(schema, tree):
             i += 1
             full_path += "/" + p
             ntype = findall(tree, lambda node: node.fullpathstr == full_path)[0].type
-            # TODO: array could be named "object"
+            
             if p != "object":
                 if p not in current_schema:
                     current_schema[p] = {}
@@ -345,7 +347,7 @@ def update_schema(schema, tree):
     base_loc = sum(1 for line in open(schema_out))
     ite_loc = sum(1 for line in open(ite_schema_out))
     res_str = f"Lines in Schema without if-then-else:\t {base_loc}\n" \
-              f"Lines in Schema with if-then-else:\t\t {ite_loc} ({ite_loc - base_loc} additional lines)"
+              f"Lines in Schema with if-then-else:\t {ite_loc} ({ite_loc - base_loc} additional lines)"
 
     return res_str, base_loc, ite_loc
 
@@ -374,7 +376,7 @@ def process_file(filenames):
     return root
 
 
-def run_experiments(config_path, table_path):
+def run_experiments(config_path):
     global config, schema_out, ite_schema_out, ite_dict, ite_cand_list, versions
     if os.path.exists(config_path):
         with open(config_path, "r", encoding='utf-8') as conf_file:
@@ -418,10 +420,19 @@ def run_experiments(config_path, table_path):
             sys.stdout = save_stdout
 
             res_str, size_base, size_total = update_schema(schema_klettke, tree)
-            validate.validate_list(input_files, ite_schema_out)
+            schema_valid, input_valid = validate.validate_list(input_files, ite_schema_out)
+            
+            if schema_valid:
+                schema_state = "passed"
+            else:
+                schema_state = "failed"
+                
+            if input_valid:
+                input_state = "passed"
+            else:
+                input_state = "failed"
 
             elapsed_time = time.time() - start_time
-            # We can just append these strings for now, as the program stops execution if validation does not pass
 
             # Count ITE-Constraints
             ite_count = 0
@@ -433,11 +444,13 @@ def run_experiments(config_path, table_path):
                         ite_count += 1
                         elem = elem["else"]
 
-            res_str += f"\n\nRuntime: {elapsed_time}s\nIf-then-else Relations found: {ite_count}\n\n" \
-                       f"Schema validation passed\nJSON validation passed\n\n" #\
+            res_str += f"\n\nRuntime: {elapsed_time}s\nCFDs found: {ite_count}\n\n" \
+                       f"Validation of produced schema against JSON Schema Draft 7 {schema_state}" \
+                       f"\nValidation of input JSON document against produced JSON Schema {input_state}\n\n" #\
                        # f"###### Config ######\n{json.dumps(config, indent=4)}"
 
             row_name = "row_" + str(i)
+            
             # Concatenation with allOf adds 4 additional lines
             size_ite = size_total - size_base - 4
             ratio = round(size_ite/size_total, 3)
@@ -461,6 +474,7 @@ def run(config_file, input_files):
     # supress prints from extract_from_file
     save_stdout = sys.stdout
     sys.stdout = open(os.devnull, 'w')
+    # Extract third-party with approach by Klette et al.
     schema_klettke = extract_from_files(input_files)
     sys.stdout = save_stdout
 

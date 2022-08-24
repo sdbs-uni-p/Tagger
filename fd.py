@@ -1,3 +1,5 @@
+# Collection of helper functions for CFD discovery
+
 # Returns a position list index
 def get_pli(lists):
     ress = []
@@ -25,10 +27,8 @@ def get_attr_name_and_type(node):
     if node.type == "object" or node.type == "array":
         return {node.name: node.type}
     elif type(node.name) is dict:
-        # TODO#4a: Handle primitive array elements
         return {"type": node.type}
     else:
-        # TODO#4b: Handle this case (i.e. check if this works properly)
         return str(node.name)
 
 

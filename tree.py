@@ -1,3 +1,5 @@
+# Code for building parse tree
+
 import bson
 
 from anytree import Node

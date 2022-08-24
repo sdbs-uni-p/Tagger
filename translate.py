@@ -1,3 +1,6 @@
+# Collection of functions translating our internal representation
+# to JSON Schema
+
 import json
 import re
 
@@ -17,7 +20,6 @@ def get_ctypes_str(s1, c1):
         s_ctypes = s1.specific_ctypes[2]
 
     if s1.type == "array":
-        # TODO: handle arrays with different types
         if c1.startswith("_spec0_"):
             s_ctypes = {"type": s1.ctypes[0]}
         if c1.startswith("_spec1_"):
@@ -31,14 +33,12 @@ def get_ctypes_str(s1, c1):
                 if len(c.children) > 0:
                     s_ctypes = {"type": "array", "items": get_ctypes_str(c, str("_" + var + str(level-1) + "_"))}
                     break
-            #s_ctypes = {"type": "array", "items": next_dict}
         elif s_ctypes is None:
             s_ctypes = {"type": s1.ctypes[0]}
         else:
             s_ctypes = {"type": str(list(s_ctypes)[0])}
     elif s1.type == "object":
         if c1.startswith("_generic2_"):
-            # TODO: handle iterative case
             if s1.type == "string":
                 s_ctypes = {"type": s1.type}
             else:
@@ -59,7 +59,6 @@ def get_ctypes_str(s1, c1):
             else:
                 s_ctypes = {"type": s1.type}
         elif c1.startswith("_generic2_"):
-            # TODO: handle iterative case
             if s1.type == "string":
                 s_ctypes = {"type": s1.type}
             else:
@@ -70,7 +69,6 @@ def get_ctypes_str(s1, c1):
     return s_ctypes
 
 
-# TODO: Fix/Implement generic cases
 def get_ite_str(s, c, is_if = False):
     ite_str_glob = {"properties": {}}
     ite_str = ite_str_glob["properties"]
@@ -78,10 +76,8 @@ def get_ite_str(s, c, is_if = False):
     required = []
     not_req = []
     for s1 in s:
-        # TODO: Handle generic arrays, discard generic objects
         if type(s1) is str:
             nonestr = s1.replace(" is missing", "")
-            # TODO: implement proper solution
             if not nonestr.startswith("_generic") or True:
                 nonestr = nonestr.replace("_generic1_", "", 1)
                 nonestr = nonestr.replace("_generic2_", "", 1)
@@ -96,9 +92,6 @@ def get_ite_str(s, c, is_if = False):
             ite_str.update(js)
         elif s1.type == "object":
             type_str = str(s1.name)
-            # TODO: object generalisation according to the paper
-            # For now objects are generalised by simply providing their type, regardless of their children
-            # (Could also mention that in paper)
             if c[i].startswith("_generic2_"):
                 if False:
                     if type_str not in ite_str:
